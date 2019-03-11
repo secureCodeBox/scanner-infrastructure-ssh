@@ -1,12 +1,18 @@
-require 'csv'
 require 'securerandom'
-
+require 'json'
+require 'logger'
+#require 'system'
 
 $logger = Logger.new(STDOUT)
+
+class ScanTimeOutError < StandardError
+
+end
 
 class SshScan
 	attr_reader :raw_results
 	attr_reader :results
+	attr_reader :errored
 
 	def initialize(config)
 		@config = config
@@ -15,31 +21,32 @@ class SshScan
 	end
 
 	def start
-		@scan_id = start_scan
+		#@scan_id = start_scan
 		$logger.info "Running scan for #{@config.ssh_scanner_target}"
 		begin
-			wait_for_scan
+			#wait_for_scan
 			$logger.info "Retrieving scan results for #{@config.ssh_scanner_target}"
-			get_scan_report
+			#get_scan_report
+
+			response = `ssh_scan -t #{@config.ssh_scanner_target}`
+			@raw_results = JSON.parse(response)
+			@results = @raw_results
+
 		rescue ScanTimeOutError => err
-			$logger.warn "Scan #{@scan_id} timed out! Sending unfinished report to engine."
+			#$logger.warn "Scan #{@scan_id} timed out! Sending unfinished report to engine."
 			get_scan_report(timed_out: true)
 			@errored = true
 		end
 
 		$logger.info "Cleaning up scan report for #{@config.ssh_scanner_target}"
-		remove_scan
+		#remove_scan
 	end
 
 	def start_scan
 		begin
-			response = RestClient::Request.execute(
-					method: :post,
-					url: @scanner_url,
-					payload: @config.generate_payload.to_json
-			)
+			response = `ssh_scan -t #{@config.ssh_scanner_target}`
 
-			$logger.debug "Starting scan returned #{response.code} code."
+			$logger.debug "Starting scan returned #{$?.success} code."
 
 			id = JSON.parse(response)["id"]
 			$logger.info "Started job with ID '#{id}'"
@@ -47,7 +54,7 @@ class SshScan
 
 		rescue => err
 			$logger.warn err
-			raise CamundaIncident.new("Failed to start arachni scan.", "This is most likely related to a error in the configuration. Check the arachni logs for more details.")
+			raise CamundaIncident.new("Failed to start SSH scan.", "This is most likely related to a error in the configuration. Check the SSH logs for more details.")
 		end
 	end
 

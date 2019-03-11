@@ -1,5 +1,6 @@
 require 'sinatra'
 require 'json'
+require 'rest-client'
 require_relative "./ssh_worker"
 
 set :port, 8080
@@ -46,7 +47,7 @@ get '/status' do
 	}.to_json
 end
 
-ddef healthy?(worker, test_run)
+def healthy?(worker, test_run)
 test_run == "SUCCESSFUL"
 end
 

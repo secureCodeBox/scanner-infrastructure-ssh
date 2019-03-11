@@ -1,22 +1,28 @@
 FROM ruby:alpine
-WORKDIR /sectools/
 
-RUN wget https://github.com/mozilla/ssh_scan_api/archive/master.tar.gz -P /sectools && \
-    tar zxvf /sectools/master.tar.gz -C /sectools && \
-    rm /sectools/master.tar.gz
+WORKDIR /sectools
+ADD Gemfile /sectools
+ADD Gemfile.lock /sectools
+
+# required for ssh-keyscan
+RUN apk --update add openssh-client && apk --update add bash
+
+RUN gem install ssh_scan
+COPY . /ssh_scan
+
+RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
+    gem install bundler && \
+    bundle install && \
+    apk del build-dependencies && \
+    rm -rf /var/cache/apk/*
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 CMD curl --fail http://localhost:8080/status || exit 1
-
-COPY Gemfile src/
-
-RUN bundle install --gemfile=/sectools/src/Gemfile
 
 COPY src/ src/
 COPY lib/ lib/
 
-RUN addgroup -system ssh && \
-    adduser -system ssh && \
-    usermod -g ssh ssh
+RUN addgroup --system ssh && \
+    adduser --system ssh
 
 RUN chgrp -R 0 /sectools/ && \
     chmod -R g=u /sectools/ && \
@@ -36,8 +42,13 @@ ENV SCB_COMMIT_ID ${COMMIT_ID}
 ENV SCB_REPOSITORY_URL ${REPOSITORY_URL}
 ENV SCB_BRANCH ${BRANCH}
 
-LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-nikto" \
-    org.opencontainers.image.description="Nikto integration for secureCodeBox" \
+#TODO rmove hardcoded env var
+ENV ENGINE_ADDRESS="http://192.168.188.232:8080"
+ENV ENGINE_BASIC_AUTH_USER="kermit"
+ENV ENGINE_BASIC_AUTH_PASSWORD="a"
+
+LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-ssh" \
+    org.opencontainers.image.description="SSH_Scan integration for secureCodeBox" \
     org.opencontainers.image.authors="iteratec GmbH" \
     org.opencontainers.image.vendor="iteratec GmbH" \
     org.opencontainers.image.documentation="https://github.com/secureCodeBox/secureCodeBox" \
