@@ -2,4 +2,4 @@ source 'https://rubygems.org'
 
 gem "sinatra"
 gem "rest-client"
-# gem "ssh"
+gem "ssh_scan"

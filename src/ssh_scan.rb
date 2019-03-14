@@ -1,6 +1,7 @@
 require 'securerandom'
 require 'json'
 require 'logger'
+require 'pathname'
 
 require_relative './ssh_result_transformer'
 
@@ -22,11 +23,10 @@ class SshScan
 	end
 
 	def start
-		$logger.info "Running scan for #{@config.ssh_scanner_target}"
+		$logger.info "Running scan for #{File.basename(@config, File.extname(@config))}"
 		begin
 			start_scan
-			$logger.info "Retrieving scan results for #{@config.ssh_scanner_target}"
-
+			$logger.info "Retrieving scan results for #{File.basename(@config, File.extname(@config))}"
 			get_scan_report()
 		rescue ScanTimeOutError => err
 			$logger.warn "Scan timed out! Sending unfinished report to engine."
@@ -37,14 +37,7 @@ class SshScan
 
 	def start_scan
 		begin
-			if @config.ssh_scan_ports.nil?
-				@response = `ssh_scan -t #{@config.ssh_scanner_target}`
-			else
-				@response = @config.ssh_scan_ports.map do |port|
-				sshScannerTarget = @config.ssh_scanner_target + port
-				("Port: #{port}" + `ssh_scan -t #{sshScannerTarget}`).to_json
-				end
-			end
+				@raw_results = JSON.parse(`ssh_scan -f #{Pathname.new(@config)}`)
 		rescue => err
 			$logger.warn err
 			raise CamundaIncident.new("Failed to start SSH scan.", "This is most likely related to a error in the configuration. Check the SSH logs for more details.")
@@ -53,7 +46,6 @@ class SshScan
 
 	def get_scan_report(timed_out: false)
 		begin
-			@raw_results = JSON.parse(@response)
 			@results = @transformer.transform(@raw_results, timed_out: timed_out)
 		rescue => err
 			$logger.warn err

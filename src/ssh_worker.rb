@@ -3,7 +3,6 @@ require 'json'
 require_relative "../lib/camunda_worker"
 
 require_relative "./ssh_scan"
-require_relative "./ssh_configuration"
 
 class SshWorker < CamundaWorker
 	attr_accessor :errored
@@ -16,21 +15,23 @@ class SshWorker < CamundaWorker
 
 	def work(job_id, targets)
 		configs = targets.map {|target|
-			SshConfiguration.from_target job_id, target
+			target.dig('location')
 		}
+		
+		targetFile = File.open("/tmp/targets-of-#{job_id}.txt", "w+")
+		targetFile.puts configs
+		targetFile.close
 
-		scans = configs.map { |config|
-			scan = SshScan.new(config)
-			scan.start
-			if scan.errored
-				@errored = true
-			end
-			scan
-		}
+		scan = SshScan.new(targetFile)
+		scan.start
+		if scan.errored
+			@errored = true
+		end
+		scan
 
 		{
-				findings: scans.flat_map{|scan| scan.results},
-				rawFindings: scans.map{|scan| scan.raw_results.to_json}.to_json,
+				findings: scan.results,
+				rawFindings: scan.raw_results.to_json,
 				scannerId: @worker_id.to_s,
 				scannerType: 'ssh'
 		}

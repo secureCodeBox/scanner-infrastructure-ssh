@@ -16,8 +16,6 @@ class SshConfiguration
 
     config.job_id = job_id
     config.ssh_scanner_target = target.dig('location')
-    config.ssh_scan_ports = target.dig('attributes', 'SSH_SCAN_PORTS')
-
     config
   end
 end
