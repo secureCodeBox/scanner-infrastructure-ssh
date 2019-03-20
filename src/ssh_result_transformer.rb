@@ -30,7 +30,7 @@ class SshResultTransformer
               references: r.dig('compliance', 'references')
           }
       }
-      
+
       unless r.dig('compliance', 'recommendations').nil?
         r.dig('compliance', 'recommendations').each do |f|
           findings << {
@@ -50,7 +50,7 @@ class SshResultTransformer
     end
 
     if timed_out
-      findings.push({
+      findings = [{
        id: @uuid_provider.uuid,
        name: "SSH Scan timed out and could no be finished.",
        description: "SSH Scan didnt send any new requests for 5 minutes. This probably means that ssh_scan encountered some internal errors it could not handle.",
@@ -59,7 +59,7 @@ class SshResultTransformer
        category: "ScanError",
        hint: "This could be related to a misconfiguration.",
        attributes: {}
-       })
+       }]
     end
 
     findings

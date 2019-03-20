@@ -43,11 +43,6 @@ ENV SCB_COMMIT_ID ${COMMIT_ID}
 ENV SCB_REPOSITORY_URL ${REPOSITORY_URL}
 ENV SCB_BRANCH ${BRANCH}
 
-#TODO rmove hardcoded env var
-ENV ENGINE_ADDRESS="http://192.168.188.232:8080"
-ENV ENGINE_BASIC_AUTH_USER="kermit"
-ENV ENGINE_BASIC_AUTH_PASSWORD="a"
-
 LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-ssh" \
     org.opencontainers.image.description="SSH_Scan integration for secureCodeBox" \
     org.opencontainers.image.authors="iteratec GmbH" \

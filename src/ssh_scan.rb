@@ -29,7 +29,7 @@ class SshScan
 			start_scan
 			$logger.info "Retrieving scan results for #{File.basename(@targetfile, File.extname(@targetfile))}"
 			get_scan_report()
-		rescue ScanTimeOutError => err
+		rescue ScanTimeOutError
 			$logger.warn "Scan timed out! Sending unfinished report to engine."
 			get_scan_report(timed_out: true)
 			@errored = true
@@ -41,7 +41,7 @@ class SshScan
 			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} "
 
 			if not @config.ssh_policy_file.nil?
-				sshCommandLine += "-P #{@config.ssh_policy_file} "
+				sshCommandLine += "-P #{@config.filePath} "
 			end
 			if not @config.ssh_timeout_seconds.nil?
 				sshCommandLine += "-T #{@config.ssh_timeout_seconds}"
