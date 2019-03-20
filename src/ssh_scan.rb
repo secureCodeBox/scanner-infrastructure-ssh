@@ -46,7 +46,6 @@ class SshScan
 			if not @config.ssh_timeout_seconds.nil?
 				sshCommandLine += "-T #{@config.ssh_timeout_seconds}"
 			end
-			$logger.info(sshCommandLine)
 				@raw_results = JSON.parse(`#{sshCommandLine}`)
 		rescue => err
 			$logger.warn err
