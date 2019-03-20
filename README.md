@@ -4,7 +4,7 @@
 
 # About
 
-This repository contains a self contained µService utilizing a SSH Scanner for the secureCodeBox project.
+This repository contains a self contained µService utilizing the Mozilla SSH Scanner for the secureCodeBox project.
 
 Further Documentation:
 
