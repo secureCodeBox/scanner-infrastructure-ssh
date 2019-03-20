@@ -1,6 +1,7 @@
 require 'json'
 
 require_relative "../lib/camunda_worker"
+require_relative "./ssh_configuration"
 
 require_relative "./ssh_scan"
 
@@ -14,15 +15,16 @@ class SshWorker < CamundaWorker
 	end
 
 	def work(job_id, targets)
-		configs = targets.map {|target|
+		locations = targets.map {|target|
 			target.dig('location')
 		}
-		
+		config = SshConfiguration.from_target(job_id, targets.first)
+
 		targetFile = File.open("/tmp/targets-of-#{job_id}.txt", "w+")
-		targetFile.puts configs
+		targetFile.puts locations
 		targetFile.close
 
-		scan = SshScan.new(targetFile)
+		scan = SshScan.new(targetFile, config)
 		scan.start
 		if scan.errored
 			@errored = true

@@ -7,15 +7,16 @@ end
 
 class SshConfiguration
   attr_accessor :job_id
-  attr_accessor :ssh_scanner_target
-  attr_accessor :ssh_scan_ports
+  attr_accessor :ssh_policy_file
+  attr_accessor :ssh_timeout_seconds
 
 
   def self.from_target(job_id, target)
     config = SshConfiguration.new
 
     config.job_id = job_id
-    config.ssh_scanner_target = target.dig('location')
+    config.ssh_policy_file = target.dig('attributes','SSH_POLICY_FILE')
+    config.ssh_timeout_seconds = target.dig('attributes','SSH_TIMEOUT_SECONDS')
     config
   end
 end

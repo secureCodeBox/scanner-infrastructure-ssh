@@ -16,17 +16,18 @@ class SshScan
 	attr_reader :results
 	attr_reader :errored
 
-	def initialize(config)
+	def initialize(targetfile, config)
+		@targetfile = targetfile
 		@config = config
 		@errored = false
 		@transformer = SshResultTransformer.new
 	end
 
 	def start
-		$logger.info "Running scan for #{File.basename(@config, File.extname(@config))}"
+		$logger.info "Running scan for #{File.basename(@targetfile, File.extname(@targetfile))}"
 		begin
 			start_scan
-			$logger.info "Retrieving scan results for #{File.basename(@config, File.extname(@config))}"
+			$logger.info "Retrieving scan results for #{File.basename(@targetfile, File.extname(@targetfile))}"
 			get_scan_report()
 		rescue ScanTimeOutError => err
 			$logger.warn "Scan timed out! Sending unfinished report to engine."
@@ -37,7 +38,16 @@ class SshScan
 
 	def start_scan
 		begin
-				@raw_results = JSON.parse(`ssh_scan -f #{Pathname.new(@config)}`)
+			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} "
+
+			if not @config.ssh_policy_file.nil?
+				sshCommandLine += "-P #{@config.ssh_policy_file} "
+			end
+			if not @config.ssh_timeout_seconds.nil?
+				sshCommandLine += "-T #{@config.ssh_timeout_seconds}"
+			end
+			$logger.info(sshCommandLine)
+				@raw_results = JSON.parse(`#{sshCommandLine}`)
 		rescue => err
 			$logger.warn err
 			raise CamundaIncident.new("Failed to start SSH scan.", "This is most likely related to a error in the configuration. Check the SSH logs for more details.")
