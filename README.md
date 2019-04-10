@@ -1,6 +1,6 @@
-[![Build Status](https://travis-ci.com/secureCodeBox/scanner-webapplication-arachni.svg?branch=develop)](https://travis-ci.com/secureCodeBox/scanner-webapplication-arachni)
+[![Build Status](https://travis-ci.com/secureCodeBox/scanner-infrastructure-ssh.svg?branch=develop)](https://travis-ci.com/secureCodeBox/scanner-infrastructure-ssh)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub release](https://img.shields.io/github/release/secureCodeBox/scanner-webapplication-arachni.svg)](https://github.com/secureCodeBox/scanner-webapplication-arachni/releases/latest)
+[![GitHub release](https://img.shields.io/github/release/secureCodeBox/scanner-infrastructure-ssh.svg)](https://github.com/secureCodeBox/scanner-infrastructure-ssh/releases/latest)
 
 # About
 
