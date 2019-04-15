@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require 'rest-client'
+require 'ruby-scanner-scaffolding'
 require_relative "./ssh_worker"
 
 set :port, 8080
@@ -15,7 +16,7 @@ client = SshWorker.new(
 
 get '/status' do
 
-  test_run = scanner_test
+  test_run = health_check
   status 500
   if healthy?(client, test_run)
     status 200
@@ -51,19 +52,8 @@ def healthy?(worker, test_run)
 test_run == "SUCCESSFUL"
 end
 
-def scanner_test
+def health_check
   begin
-    response = RestClient::Request.execute(
-        method: :get,
-        url: 'http://127.0.0.1:7331/scans',
-        timeout: 2
-    )
-    if response.code == 200
-      "SUCCESSFUL"
-    else
-      "FAILED"
-    end
-  rescue
-    "FAILED"
+    scanner_test.scanner_test
   end
 end

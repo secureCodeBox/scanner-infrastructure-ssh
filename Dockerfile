@@ -10,6 +10,7 @@ RUN apk --update add openssh-client && apk --update add bash
 RUN gem install ssh_scan bundler
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
+    apk --update add git && \
     bundle install && \
     apk del build-dependencies && \
     rm -rf /var/cache/apk/*
