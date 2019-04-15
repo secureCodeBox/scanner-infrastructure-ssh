@@ -38,16 +38,20 @@ class SshScan
 
 	def start_scan
 		begin
-			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} "
+      resultsFile = File.open("/tmp/raw-results.txt", "w+")
+
+			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} -o #{Pathname.new(resultsFile)}"
 
 			if not @config.ssh_policy_file.nil?
 				sshCommandLine += "-P #{@config.filePath} "
 			end
 			if not @config.ssh_timeout_seconds.nil?
 				sshCommandLine += "-T #{@config.ssh_timeout_seconds}"
-			end
-				@raw_results = JSON.parse(`#{sshCommandLine}`)
-		rescue => err
+      end
+      resultsFile.write(`#{sshCommandLine}`)
+      @raw_results = JSON.parse(resultsFile.read)
+      File.delete(resultsFile)
+    rescue => err
 			$logger.warn err
 			raise CamundaIncident.new("Failed to start SSH scan.", "This is most likely related to a error in the configuration. Check the SSH logs for more details.")
 		end
