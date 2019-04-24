@@ -38,6 +38,7 @@ class SshScan
 
 	def start_scan
 		begin
+			
 			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} "
 
 			if not @config.ssh_policy_file.nil?
