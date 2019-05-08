@@ -1,6 +1,8 @@
 require 'sinatra'
 require 'json'
 require 'rest-client'
+require 'bundler'
+Bundler.setup(:default)
 require 'ruby-scanner-scaffolding'
 require_relative "./ssh_worker"
 
