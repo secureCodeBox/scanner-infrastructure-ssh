@@ -90,10 +90,15 @@ EOM
             attributes: {
                 compliance_policy: nil,
                 compliant: nil,
+                hostname: 'localhost',
+                os_cpe: 'o:unknown',
                 grade: nil,
                 start_time: '2019-03-20 14:54:36 +0100',
                 end_time: '2019-03-20 14:54:41 +0100',
                 scan_duration_seconds: 5.138688,
+                server_banner: '',
+                ssh_lib_cpe: 'a:unknown',
+                ssh_version: 'unknown',
                 references: nil
             }
         }]
