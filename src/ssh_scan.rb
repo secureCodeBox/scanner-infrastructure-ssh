@@ -25,15 +25,9 @@ class SshScan
 
 	def start
 		$logger.info "Running scan for #{File.basename(@targetfile, File.extname(@targetfile))}"
-		begin
 			start_scan
 			$logger.info "Retrieving scan results for #{File.basename(@targetfile, File.extname(@targetfile))}"
-			get_scan_report()
-		rescue ScanTimeOutError
-			$logger.warn "Scan timed out! Sending unfinished report to engine."
-			get_scan_report(timed_out: true)
-			@errored = true
-		end
+			get_scan_report
 	end
 
 	def start_scan
@@ -54,9 +48,9 @@ class SshScan
 		end
 	end
 
-	def get_scan_report(timed_out: false)
+	def get_scan_report
 		begin
-			@results = @transformer.transform(@raw_results, timed_out: timed_out)
+			@results = @transformer.transform(@raw_results)
 		rescue => err
 			$logger.warn err
 		end
