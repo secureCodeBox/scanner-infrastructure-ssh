@@ -7,9 +7,6 @@ require_relative './ssh_result_transformer'
 
 $logger = Logger.new(STDOUT)
 
-class ScanTimeOutError < StandardError
-
-end
 
 class SshScan
 	attr_reader :raw_results
