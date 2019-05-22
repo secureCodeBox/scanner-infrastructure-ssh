@@ -10,6 +10,7 @@ RUN apk --update add openssh-client && apk --update add bash
 RUN gem install ssh_scan bundler
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
+    apk --update add git && \
     bundle install && \
     apk del build-dependencies && \
     rm -rf /var/cache/apk/*
@@ -20,7 +21,6 @@ COPY . /ssh_scan
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 CMD curl --fail http://localhost:8080/status || exit 1
 
 COPY src/ src/
-COPY lib/ lib/
 
 RUN addgroup --system ssh && \
     adduser --system ssh
@@ -55,4 +55,4 @@ LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-ssh" \
     org.opencontainers.image.revision=$COMMIT_ID \
     org.opencontainers.image.created=$BUILD_DATE
 
-ENTRYPOINT ["bash","/sectools/src/starter.sh"]
+ENTRYPOINT ["ruby","./src/main.rb"]

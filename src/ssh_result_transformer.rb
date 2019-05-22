@@ -49,19 +49,6 @@ class SshResultTransformer
       end
     end
 
-    if timed_out
-      findings = [{
-       id: @uuid_provider.uuid,
-       name: "SSH Scan timed out and could no be finished.",
-       description: "SSH Scan didnt send any new requests for 5 minutes. This probably means that ssh_scan encountered some internal errors it could not handle.",
-       osi_layer: 'NOT_APPLICABLE',
-       severity: "MEDIUM",
-       category: "ScanError",
-       hint: "This could be related to a misconfiguration.",
-       attributes: {}
-       }]
-    end
-
     findings
   end
 end

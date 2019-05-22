@@ -1,6 +1,6 @@
 require 'json'
+require 'ruby-scanner-scaffolding'
 
-require_relative "../lib/camunda_worker"
 require_relative "./ssh_configuration"
 
 require_relative "./ssh_scan"
