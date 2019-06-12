@@ -90,32 +90,18 @@ EOM
             attributes: {
                 compliance_policy: nil,
                 compliant: nil,
+                hostname: 'localhost',
+                os_cpe: 'o:unknown',
                 grade: nil,
                 start_time: '2019-03-20 14:54:36 +0100',
                 end_time: '2019-03-20 14:54:41 +0100',
                 scan_duration_seconds: 5.138688,
+                server_banner: '',
+                ssh_lib_cpe: 'a:unknown',
+                ssh_version: 'unknown',
                 references: nil
             }
         }]
-    )
-  end
-
-  def test_add_a_timed_out_finding_when_optional_parameter_is_passed
-
-    result = JSON.parse(@test_result)
-
-    assert_equal(
-        @transformer.transform(result, timed_out: true),
-        [{
-             id: "49bf7fd3-8512-4d73-a28f-608e493cd726",
-             name: "SSH Scan timed out and could no be finished.",
-             description: "SSH Scan didnt send any new requests for 5 minutes. This probably means that ssh_scan encountered some internal errors it could not handle.",
-             osi_layer: 'NOT_APPLICABLE',
-             severity: "MEDIUM",
-             category: "ScanError",
-             hint: "This could be related to a misconfiguration.",
-             attributes: {}
-         }]
     )
   end
 end

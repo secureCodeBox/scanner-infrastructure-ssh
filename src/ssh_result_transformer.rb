@@ -21,6 +21,11 @@ class SshResultTransformer
           hint: '',
           location: r.dig('ip'),
           attributes: {
+              hostname: r.dig('hostname'),
+              server_banner: r.dig('server_banner'),
+              ssh_version: r.dig('ssh_version'),
+              os_cpe: r.dig('os_cpe'),
+              ssh_lib_cpe: r.dig('ssh_lib_cpe'),
               compliance_policy: r.dig('compliance', 'policy'),
               compliant: r.dig('compliance', 'compliant'),
               grade: r.dig('compliance', 'grade'),
@@ -39,7 +44,7 @@ class SshResultTransformer
               description: f.split(':')[1],
               category: 'SSH Service',
               osi_layer: 'NETWORK',
-              severity: 'LOW',
+              severity: decideSeverity(r.dig('compliance', 'grade')),
               reference: {},
               hint: '',
               location: r.dig('ip'),
@@ -49,19 +54,17 @@ class SshResultTransformer
       end
     end
 
-    if timed_out
-      findings = [{
-       id: @uuid_provider.uuid,
-       name: "SSH Scan timed out and could no be finished.",
-       description: "SSH Scan didnt send any new requests for 5 minutes. This probably means that ssh_scan encountered some internal errors it could not handle.",
-       osi_layer: 'NOT_APPLICABLE',
-       severity: "MEDIUM",
-       category: "ScanError",
-       hint: "This could be related to a misconfiguration.",
-       attributes: {}
-       }]
-    end
-
     findings
+  end
+
+  def decideSeverity(grade)
+    case grade
+    when 'A', 'B'
+      'LOW'
+    when 'C', 'D'
+      'MEDIUM'
+    when 'E', 'F'
+      'HIGH'
+    end
   end
 end

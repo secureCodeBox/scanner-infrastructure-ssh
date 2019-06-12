@@ -7,9 +7,6 @@ require_relative './ssh_result_transformer'
 
 $logger = Logger.new(STDOUT)
 
-class ScanTimeOutError < StandardError
-
-end
 
 class SshScan
 	attr_reader :raw_results
@@ -25,37 +22,35 @@ class SshScan
 
 	def start
 		$logger.info "Running scan for #{File.basename(@targetfile, File.extname(@targetfile))}"
-		begin
 			start_scan
 			$logger.info "Retrieving scan results for #{File.basename(@targetfile, File.extname(@targetfile))}"
-			get_scan_report()
-		rescue ScanTimeOutError
-			$logger.warn "Scan timed out! Sending unfinished report to engine."
-			get_scan_report(timed_out: true)
-			@errored = true
-		end
+			get_scan_report
 	end
 
 	def start_scan
 		begin
-			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} "
+      resultsFile = File.open("/tmp/raw-results.txt", "w+")
+
+			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} -o #{Pathname.new(resultsFile)}"
 
 			if not @config.ssh_policy_file.nil?
 				sshCommandLine += "-P #{@config.filePath} "
 			end
 			if not @config.ssh_timeout_seconds.nil?
 				sshCommandLine += "-T #{@config.ssh_timeout_seconds}"
-			end
-				@raw_results = JSON.parse(`#{sshCommandLine}`)
-		rescue => err
+      end
+      resultsFile.write(`#{sshCommandLine}`)
+      @raw_results = JSON.parse(resultsFile.read)
+      File.delete(resultsFile)
+    rescue => err
 			$logger.warn err
 			raise CamundaIncident.new("Failed to start SSH scan.", "This is most likely related to a error in the configuration. Check the SSH logs for more details.")
 		end
 	end
 
-	def get_scan_report(timed_out: false)
+	def get_scan_report
 		begin
-			@results = @transformer.transform(@raw_results, timed_out: timed_out)
+			@results = @transformer.transform(@raw_results)
 		rescue => err
 			$logger.warn err
 		end
