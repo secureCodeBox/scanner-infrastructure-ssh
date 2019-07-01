@@ -1,11 +1,11 @@
-language: ruby
-rvm:
-  - 2.5
 jobs:
   include:
     - stage: test
+      language: ruby
+      rvm: 2.5
       script: rake test
     - stage: build docker image
+      language: minimal
       services:
         - docker
       script:
