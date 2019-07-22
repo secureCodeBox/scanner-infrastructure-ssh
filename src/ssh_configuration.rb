@@ -17,8 +17,8 @@ class SshConfiguration
 
     config.policies_directory = policies_directory
     config.job_id = job_id
-    config.ssh_policy_file = target.dig('attributes','SSH_POLICY_FILE')
-    config.ssh_timeout_seconds = target.dig('attributes','SSH_TIMEOUT_SECONDS')
+    config.ssh_policy_file = target.dig('attributes','SSH_POLICY_FILE') unless !target.dig('attributes','SSH_POLICY_FILE')
+    config.ssh_timeout_seconds = target.dig('attributes','SSH_TIMEOUT_SECONDS') unless !target.dig('attributes','SSH_TIMEOUT_SECONDS')
     config
   end
 

@@ -31,7 +31,7 @@ class SshScan
 		begin
       resultsFile = File.open("/tmp/raw-results.txt", "w+")
 
-			sshCommandLine = "ssh_scan -f #{Pathname.new(@targetfile)} -o #{Pathname.new(resultsFile)}"
+			sshCommandLine = "ssh_scan --fingerprint-db /tmp/fingerprint-db.yml -f #{Pathname.new(@targetfile)} -o #{Pathname.new(resultsFile)}"
 
 			if not @config.ssh_policy_file.nil?
 				sshCommandLine += "-P #{@config.filePath} "

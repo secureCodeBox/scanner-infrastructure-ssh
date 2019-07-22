@@ -25,9 +25,9 @@ COPY src/ src/
 RUN addgroup --system ssh && \
     adduser --system ssh
 
-RUN chgrp -R 0 /sectools/ && \
-    chmod -R g=u /sectools/ && \
-    chown -R ssh /sectools/
+RUN chgrp -R 0 /ssh_scan/ && \
+    chmod -R g=u /ssh_scan/ && \
+    chown -R ssh /ssh_scan/
 
 USER ssh
 
