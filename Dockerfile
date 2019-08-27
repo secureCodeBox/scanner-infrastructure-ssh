@@ -1,12 +1,11 @@
-FROM ruby:2.6.3-alpine3.10
+FROM ruby:alpine
 
 WORKDIR /sectools
 ADD Gemfile /sectools
 ADD Gemfile.lock /sectools
 
 # required for ssh-keyscan
-RUN apk --update add openssh-client bash ca-certificates && \
-    update-ca-certificates && \
+RUN apk --update add openssh-client && apk --update add bash && \
     rm -rf /var/cache/apk/*
 
 RUN gem install ssh_scan bundler
