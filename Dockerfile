@@ -5,7 +5,8 @@ ADD Gemfile /sectools
 ADD Gemfile.lock /sectools
 
 # required for ssh-keyscan
-RUN apk --update add openssh-client && apk --update add bash
+RUN apk --update add openssh-client && apk --update add bash && \
+    rm -rf /var/cache/apk/*
 
 RUN gem install ssh_scan bundler
 
@@ -16,7 +17,6 @@ RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
     rm -rf /var/cache/apk/*
 
 COPY . /ssh_scan
-
 
 HEALTHCHECK --interval=30s --timeout=5s --start-period=120s --retries=3 CMD curl --fail http://localhost:8080/status || exit 1
 
