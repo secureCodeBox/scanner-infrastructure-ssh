@@ -2,6 +2,6 @@ source 'https://rubygems.org'
 
 gem "sinatra"
 gem "rest-client"
-gem "ssh_scan", "0.0.41"
+gem "ssh_scan", :git => "https://github.com/secureCodeBox/ssh_scan.git"
 
-gem "ruby-scanner-scaffolding", :git => "git://github.com/secureCodeBox/ruby-scanner-scaffolding.git", :tag => "v1.0.0"
+gem "ruby-scanner-scaffolding", :git => "https://github.com/secureCodeBox/ruby-scanner-scaffolding.git", :tag => "v1.0.0"
