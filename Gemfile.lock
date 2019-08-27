@@ -1,5 +1,5 @@
 GIT
-  remote: https://github.com/secureCodeBox/ruby-scanner-scaffolding.git
+  remote: git://github.com/secureCodeBox/ruby-scanner-scaffolding.git
   revision: fff6c92edffb1f55bde432156ffd60c38c034e49
   tag: v1.0.0
   specs:
@@ -38,7 +38,7 @@ GEM
       rack (~> 2.0)
       rack-protection (= 2.0.5)
       tilt (~> 2.0)
-    ssh_scan (0.0.40)
+    ssh_scan (0.0.41)
       bindata (= 2.4.3)
       net-ssh (= 5.0.2)
       netaddr (= 1.5.1)
@@ -58,7 +58,7 @@ DEPENDENCIES
   rest-client
   ruby-scanner-scaffolding!
   sinatra
-  ssh_scan
+  ssh_scan (= 0.0.41)
 
 BUNDLED WITH
    2.0.1
