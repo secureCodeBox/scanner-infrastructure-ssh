@@ -29,7 +29,6 @@ class SshWorker < CamundaWorker
 		if scan.errored
 			@errored = true
 		end
-		scan
 
 		{
 				findings: scan.results,
