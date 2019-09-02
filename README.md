@@ -1,5 +1,7 @@
 ---
-title: SSH
+title: "SSH"
+path: "scanner/SSH"
+category: "scanner"
 
 ---
 
@@ -10,6 +12,8 @@ title: SSH
 # About
 
 This repository contains a self contained µService utilizing the Mozilla SSH Scanner for the secureCodeBox project.
+
+<!-- end -->
 
 Further Documentation:
 
