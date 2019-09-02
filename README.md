@@ -4,16 +4,13 @@ path: "scanner/SSH"
 category: "scanner"
 
 ---
+SSH_scan is an easy-to-use prototype SSH configuration and policy scanner, inspired by Mozilla OpenSSH Security Guide, which provides a reasonable baseline policy recommendation for SSH configuration parameters such as Ciphers, MACs, and KexAlgos and much more.
 
-[![Build Status](https://travis-ci.com/secureCodeBox/scanner-infrastructure-ssh.svg?branch=develop)](https://travis-ci.com/secureCodeBox/scanner-infrastructure-ssh)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-[![GitHub release](https://img.shields.io/github/release/secureCodeBox/scanner-infrastructure-ssh.svg)](https://github.com/secureCodeBox/scanner-infrastructure-ssh/releases/latest)
+<!-- end -->
 
 # About
 
 This repository contains a self contained µService utilizing the Mozilla SSH Scanner for the secureCodeBox project.
-
-<!-- end -->
 
 Further Documentation:
 
@@ -50,6 +47,11 @@ To run the testsuite run:
 To build the docker container run:
 
 `docker build -t IMAGE_NAME:LABEL .`
+
+[![Build Status](https://travis-ci.com/secureCodeBox/scanner-infrastructure-ssh.svg?branch=develop)](https://travis-ci.com/secureCodeBox/scanner-infrastructure-ssh)
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![GitHub release](https://img.shields.io/github/release/secureCodeBox/scanner-infrastructure-ssh.svg)](https://github.com/secureCodeBox/scanner-infrastructure-ssh/releases/latest)
+
 
 [scb-project]: https://github.com/secureCodeBox/secureCodeBox
 [scb-developer-guide]: https://github.com/secureCodeBox/secureCodeBox/blob/develop/docs/developer-guide/README.md
