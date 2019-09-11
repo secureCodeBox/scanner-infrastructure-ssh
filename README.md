@@ -12,7 +12,7 @@ SSH_scan is an easy-to-use prototype SSH configuration and policy scanner, inspi
 
 # About
 
-This repository contains a self contained µService utilizing the Mozilla SSH Scanner for the secureCodeBox project. To learn more about the ssh_scan scanner itself visit [wpscan.org] or [wpscan.io].
+This repository contains a self contained µService utilizing the Mozilla SSH Scanner for the secureCodeBox project. To learn more about the ssh_scan scanner itself visit [ssh_scan].
 
 ## ssh_scan parameters
 
