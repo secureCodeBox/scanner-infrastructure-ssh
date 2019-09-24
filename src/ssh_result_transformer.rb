@@ -3,15 +3,15 @@ require 'json'
 
 class SshResultTransformer
   def initialize(uuid_provider = SecureRandom)
-    @uuid_provider = uuid_provider;
+    @uuid_provider = uuid_provider
   end
-
 
   def transform(results, timed_out: false)
     findings = []
 
     results.each do |r|
-      findings << {
+      findings <<
+        {
           id: @uuid_provider.uuid,
           name: 'SSH Compliance',
           description: 'SSH Compliance Information',
@@ -22,25 +22,31 @@ class SshResultTransformer
           hint: '',
           location: r.dig('ip'),
           attributes: {
-              hostname: (r.dig('hostname') unless r.dig('hostname').empty?),
-              server_banner: (r.dig('server_banner') unless r.dig('server_banner').empty?),
-              ssh_version: r.dig('ssh_version'),
-              os_cpe: r.dig('os_cpe'),
-              ssh_lib_cpe: r.dig('ssh_lib_cpe'),
-              compliance_policy: r.dig('compliance', 'policy'),
-              compliant: r.dig('compliance', 'compliant'),
-              grade: r.dig('compliance', 'grade'),
-              start_time: r.dig('start_time'),
-              end_time: r.dig('end_time'),
-              scan_duration_seconds: r.dig('scan_duration_seconds'),
-              references: r.dig('compliance', 'references'),
-              auth_methods: r.dig('auth_methods').reduce({}) { |h, v| h[v] = true; h }
+            hostname: (r.dig('hostname') unless r.dig('hostname').empty?),
+            server_banner:
+              (r.dig('server_banner') unless r.dig('server_banner').empty?),
+            ssh_version: r.dig('ssh_version'),
+            os_cpe: r.dig('os_cpe'),
+            ssh_lib_cpe: r.dig('ssh_lib_cpe'),
+            compliance_policy: r.dig('compliance', 'policy'),
+            compliant: r.dig('compliance', 'compliant'),
+            grade: r.dig('compliance', 'grade'),
+            start_time: r.dig('start_time'),
+            end_time: r.dig('end_time'),
+            scan_duration_seconds: r.dig('scan_duration_seconds'),
+            references: r.dig('compliance', 'references'),
+            auth_methods:
+              r.dig('auth_methods').reduce({}) do |h, v|
+                h[v] = true
+                h
+              end
           }
-      }
+        }
 
       unless r.dig('compliance', 'recommendations').nil?
         r.dig('compliance', 'recommendations').each do |f|
-          findings << {
+          findings <<
+            {
               id: @uuid_provider.uuid,
               name: f.split(':')[0],
               description: f.split(':')[1],
@@ -51,7 +57,7 @@ class SshResultTransformer
               hint: '',
               location: r.dig('ip'),
               attributes: {}
-          }
+            }
         end
       end
     end

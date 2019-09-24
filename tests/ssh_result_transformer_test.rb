@@ -9,7 +9,6 @@ class FakeUuidProvider
 end
 
 class SshResultTransformerTest < Test::Unit::TestCase
-
   def setup
     @transformer = SshResultTransformer.new(FakeUuidProvider.new)
   end
@@ -73,33 +72,35 @@ EOM
     result = JSON.parse(test_raw)
 
     assert_equal(
-        @transformer.transform(result),
-        [{
-             id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-             name: 'SSH Compliance',
-             description: 'SSH Compliance Information',
-             category: 'SSH Service',
-             osi_layer: 'NETWORK',
-             severity: 'INFORMATIONAL',
-             reference: {},
-             hint: '',
-             location: '127.0.0.1',
-             attributes: {
-                 compliance_policy: nil,
-                 compliant: nil,
-                 hostname: nil,
-                 os_cpe: 'o:unknown',
-                 grade: nil,
-                 start_time: '2019-03-20 14:54:36 +0100',
-                 end_time: '2019-03-20 14:54:41 +0100',
-                 scan_duration_seconds: 5.138688,
-                 server_banner: nil,
-                 ssh_lib_cpe: 'a:unknown',
-                 ssh_version: 'unknown',
-                 references: nil,
-                 auth_methods: {}
-             }
-         }]
+      @transformer.transform(result),
+      [
+        {
+          id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
+          name: 'SSH Compliance',
+          description: 'SSH Compliance Information',
+          category: 'SSH Service',
+          osi_layer: 'NETWORK',
+          severity: 'INFORMATIONAL',
+          reference: {},
+          hint: '',
+          location: '127.0.0.1',
+          attributes: {
+            compliance_policy: nil,
+            compliant: nil,
+            hostname: nil,
+            os_cpe: 'o:unknown',
+            grade: nil,
+            start_time: '2019-03-20 14:54:36 +0100',
+            end_time: '2019-03-20 14:54:41 +0100',
+            scan_duration_seconds: 5.138688,
+            server_banner: nil,
+            ssh_lib_cpe: 'a:unknown',
+            ssh_version: 'unknown',
+            references: nil,
+            auth_methods: {}
+          }
+        }
+      ]
     )
   end
 
@@ -240,70 +241,66 @@ EOM
     findings = @transformer.transform(result)
 
     assert_equal(
-        findings.first,
-        {
-            :attributes => {
-                :compliance_policy => "Mozilla Modern",
-                :compliant => false,
-                :end_time => "2019-09-23 17:47:51 +0200",
-                :grade => "C",
-                :hostname => "securecodebox.io",
-                :os_cpe => "o:canonical:ubuntu:16.04",
-                :references => ["https://wiki.mozilla.org/Security/Guidelines/OpenSSH"],
-                :scan_duration_seconds => 0.699356,
-                :server_banner => "SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.4",
-                :ssh_lib_cpe => "a:openssh:openssh:7.2p2",
-                :ssh_version => 2.0,
-                :start_time => "2019-09-23 17:47:50 +0200",
-                :auth_methods => {
-                    "publickey" => true
-                }
-            },
-            :category => "SSH Service",
-            :description => "SSH Compliance Information",
-            :hint => "",
-            :id => "49bf7fd3-8512-4d73-a28f-608e493cd726",
-            :location => "138.201.126.99",
-            :name => "SSH Compliance",
-            :osi_layer => "NETWORK",
-            :reference => {},
-            :severity => "INFORMATIONAL"
-        }
+      findings.first,
+      {
+        attributes: {
+          compliance_policy: 'Mozilla Modern',
+          compliant: false,
+          end_time: '2019-09-23 17:47:51 +0200',
+          grade: 'C',
+          hostname: 'securecodebox.io',
+          os_cpe: 'o:canonical:ubuntu:16.04',
+          references: %w[https://wiki.mozilla.org/Security/Guidelines/OpenSSH],
+          scan_duration_seconds: 0.699356,
+          server_banner: 'SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.4',
+          ssh_lib_cpe: 'a:openssh:openssh:7.2p2',
+          ssh_version: 2.0,
+          start_time: '2019-09-23 17:47:50 +0200',
+          auth_methods: { 'publickey' => true }
+        },
+        category: 'SSH Service',
+        description: 'SSH Compliance Information',
+        hint: '',
+        id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
+        location: '138.201.126.99',
+        name: 'SSH Compliance',
+        osi_layer: 'NETWORK',
+        reference: {},
+        severity: 'INFORMATIONAL'
+      }
     )
 
     assert_equal(
       findings[1],
       {
-          :attributes => {},
-          :category => "SSH Service",
-          :description => " diffie-hellman-group14-sha1",
-          :hint => "",
-          :id => "49bf7fd3-8512-4d73-a28f-608e493cd726",
-          :location => "138.201.126.99",
-          :name => "Remove these key exchange algorithms",
-          :osi_layer => "NETWORK",
-          :reference => {},
-          :severity => "MEDIUM"
+        attributes: {},
+        category: 'SSH Service',
+        description: ' diffie-hellman-group14-sha1',
+        hint: '',
+        id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
+        location: '138.201.126.99',
+        name: 'Remove these key exchange algorithms',
+        osi_layer: 'NETWORK',
+        reference: {},
+        severity: 'MEDIUM'
       }
     )
 
     assert_equal(
       findings[2],
-        {
-            :attributes => {},
-            :category => "SSH Service",
-            :description =>
-                " umac-64-etm@openssh.com, hmac-sha1-etm@openssh.com, umac-64@openssh.com, hmac-sha1",
-            :hint => "",
-            :id => "49bf7fd3-8512-4d73-a28f-608e493cd726",
-            :location => "138.201.126.99",
-            :name => "Remove these MAC algorithms",
-            :osi_layer => "NETWORK",
-            :reference => {},
-            :severity => "MEDIUM"
-        }
+      {
+        attributes: {},
+        category: 'SSH Service',
+        description:
+          ' umac-64-etm@openssh.com, hmac-sha1-etm@openssh.com, umac-64@openssh.com, hmac-sha1',
+        hint: '',
+        id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
+        location: '138.201.126.99',
+        name: 'Remove these MAC algorithms',
+        osi_layer: 'NETWORK',
+        reference: {},
+        severity: 'MEDIUM'
+      }
     )
-
-
   end
 end
