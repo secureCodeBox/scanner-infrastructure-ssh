@@ -97,7 +97,11 @@ EOM
             ssh_lib_cpe: 'a:unknown',
             ssh_version: 'unknown',
             references: nil,
-            auth_methods: {}
+            auth_methods: [],
+            key_algorithms: [],
+            encryption_algorithms: [],
+            mac_algorithms: [],
+            compression_algorithms: []
           }
         }
       ]
@@ -241,7 +245,6 @@ EOM
     findings = @transformer.transform(result)
 
     assert_equal(
-      findings.first,
       {
         attributes: {
           compliance_policy: 'Mozilla Modern',
@@ -256,7 +259,36 @@ EOM
           ssh_lib_cpe: 'a:openssh:openssh:7.2p2',
           ssh_version: 2.0,
           start_time: '2019-09-23 17:47:50 +0200',
-          auth_methods: { 'publickey' => true }
+          auth_methods: %w[publickey],
+          key_algorithms: %w[
+            curve25519-sha256@libssh.org
+            ecdh-sha2-nistp256
+            ecdh-sha2-nistp384
+            ecdh-sha2-nistp521
+            diffie-hellman-group-exchange-sha256
+            diffie-hellman-group14-sha1
+          ],
+          encryption_algorithms: %w[
+            chacha20-poly1305@openssh.com
+            aes128-ctr
+            aes192-ctr
+            aes256-ctr
+            aes128-gcm@openssh.com
+            aes256-gcm@openssh.com
+          ],
+          mac_algorithms: %w[
+            umac-64-etm@openssh.com
+            umac-128-etm@openssh.com
+            hmac-sha2-256-etm@openssh.com
+            hmac-sha2-512-etm@openssh.com
+            hmac-sha1-etm@openssh.com
+            umac-64@openssh.com
+            umac-128@openssh.com
+            hmac-sha2-256
+            hmac-sha2-512
+            hmac-sha1
+          ],
+          compression_algorithms: %w[none zlib@openssh.com]
         },
         category: 'SSH Service',
         description: 'SSH Compliance Information',
@@ -267,11 +299,11 @@ EOM
         osi_layer: 'NETWORK',
         reference: {},
         severity: 'INFORMATIONAL'
-      }
+      },
+      findings.first
     )
 
     assert_equal(
-      findings[1],
       {
         attributes: {},
         category: 'SSH Service',
@@ -283,11 +315,11 @@ EOM
         osi_layer: 'NETWORK',
         reference: {},
         severity: 'MEDIUM'
-      }
+      },
+      findings[1]
     )
 
     assert_equal(
-      findings[2],
       {
         attributes: {},
         category: 'SSH Service',
@@ -300,7 +332,8 @@ EOM
         osi_layer: 'NETWORK',
         reference: {},
         severity: 'MEDIUM'
-      }
+      },
+      findings[2]
     )
   end
 end

@@ -35,11 +35,13 @@ class SshResultTransformer
             end_time: r.dig('end_time'),
             scan_duration_seconds: r.dig('scan_duration_seconds'),
             references: r.dig('compliance', 'references'),
-            auth_methods:
-              r.dig('auth_methods').reduce({}) do |h, v|
-                h[v] = true
-                h
-              end
+            auth_methods: r.dig('auth_methods'),
+            key_algorithms: r.dig('key_algorithms'),
+            encryption_algorithms:
+              r.dig('encryption_algorithms_server_to_client'),
+            mac_algorithms: r.dig('mac_algorithms_server_to_client'),
+            compression_algorithms:
+              r.dig('compression_algorithms_server_to_client')
           }
         }
 
