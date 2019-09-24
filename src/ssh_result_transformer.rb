@@ -118,6 +118,11 @@ class SshResultTransformer
         name: 'Discouraged SSH authentication methods are used',
         category: 'Discouraged SSH authentication methods'
       }
+    when /^Update your ssh version to/
+      {
+        name: 'Outdated SSH protocol version used',
+        category: 'Outdated SSH Protocol Version'
+      }
     else
       raise Exception.new "Unexpected Policy Violation Type: '#{message}'"
     end
