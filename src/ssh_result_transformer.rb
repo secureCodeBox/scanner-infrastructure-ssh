@@ -10,6 +10,9 @@ class SshResultTransformer
     findings = []
 
     results.each do |r|
+      location = r.dig('ip')
+      hostname = (r.dig('hostname') unless r.dig('hostname').empty?)
+
       findings <<
         {
           id: @uuid_provider.uuid,
@@ -20,9 +23,9 @@ class SshResultTransformer
           severity: 'INFORMATIONAL',
           reference: {},
           hint: '',
-          location: r.dig('ip'),
+          location: location,
           attributes: {
-            hostname: (r.dig('hostname') unless r.dig('hostname').empty?),
+            hostname: hostname,
             server_banner:
               (r.dig('server_banner') unless r.dig('server_banner').empty?),
             ssh_version: r.dig('ssh_version'),
@@ -46,25 +49,97 @@ class SshResultTransformer
         }
 
       unless r.dig('compliance', 'recommendations').nil?
-        r.dig('compliance', 'recommendations').each do |f|
+        r.dig('compliance', 'recommendations')
+          .each do |policy_violation_message|
           findings <<
-            {
-              id: @uuid_provider.uuid,
-              name: f.split(':')[0],
-              description: f.split(':')[1],
-              category: 'SSH Service',
-              osi_layer: 'NETWORK',
-              severity: decideSeverity(r.dig('compliance', 'grade')),
-              reference: {},
-              hint: '',
-              location: r.dig('ip'),
-              attributes: {}
-            }
+            create_policy_violation_finding(
+              message: policy_violation_message,
+              location: location,
+              hostname: hostname
+            )
         end
       end
     end
 
     findings
+  end
+
+  def get_policy_violation_type(message)
+    type = message.split(': ')[0]
+
+    case type
+    when /^Add these key exchange algorithms/
+      {
+        name: 'Good / encouraged SSH key algorithms are missing',
+        category: 'Missing SSH Key Algorithms'
+      }
+    when /^Add these MAC algorithms/
+      {
+        name: 'Good / encouraged SSH MAC algorithms are missing',
+        category: 'Missing SSH MAC Algorithms'
+      }
+    when /^Add these encryption ciphers/
+      {
+        name: 'Good / encouraged SSH encryption ciphers are missing',
+        category: 'Missing SSH encryption Ciphers'
+      }
+    when /^Add these compression algorithms/
+      {
+        name: 'Good / encouraged SSH compression algorithms are missing',
+        category: 'Missing SSH compression algorithms'
+      }
+    when /^Add these authentication methods/
+      {
+        name: 'Good / encouraged SSH authentication methods are missing',
+        category: 'Missing SSH authentication methods'
+      }
+    when /^Remove these key exchange algorithms/
+      {
+        name: 'Depracated / discouraged SSH key algorithms are used',
+        category: 'Insecure SSH Key Algorithms'
+      }
+    when /^Remove these MAC algorithms/
+      {
+        name: 'Depracated / discouraged SSH MAC algorithms are used',
+        category: 'Insecure SSH MAC Algorithms'
+      }
+    when /^Remove these encryption ciphers/
+      {
+        name: 'Depracated / discouraged SSH encryption ciphers are used',
+        category: 'Insecure SSH encryption Ciphers'
+      }
+    when /^Remove these compression algorithms/
+      {
+        name: 'Depracated / discouraged SSH compression algorithms are used',
+        category: 'Insecure SSH compression algorithms'
+      }
+    when /^Remove these authentication methods/
+      {
+        name: 'Discouraged SSH authentication methods are used',
+        category: 'Discouraged SSH authentication methods'
+      }
+    else
+      raise Exception.new "Unexpected Policy Violation Type: '#{message}'"
+    end
+  end
+
+  def create_policy_violation_finding(message:, location:, hostname:)
+    policy_violation_type = get_policy_violation_type(message)
+
+    payload = message.split(': ')[1].split(', ')
+
+    {
+      id: @uuid_provider.uuid,
+      name: policy_violation_type[:name],
+      description: '',
+      category: policy_violation_type[:category],
+      osi_layer: 'NETWORK',
+      severity: 'MEDIUM',
+      reference: {},
+      hint: message,
+      location: location,
+      attributes: { hostname: hostname, payload: payload }
+    }
   end
 
   def decideSeverity(grade)

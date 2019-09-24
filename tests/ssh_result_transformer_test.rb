@@ -305,33 +305,44 @@ EOM
 
     assert_equal(
       {
-        attributes: {},
-        category: 'SSH Service',
-        description: ' diffie-hellman-group14-sha1',
-        hint: '',
         id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-        location: '138.201.126.99',
-        name: 'Remove these key exchange algorithms',
+        name: 'Depracated / discouraged SSH key algorithms are used',
+        description: '',
+        category: 'Insecure SSH Key Algorithms',
         osi_layer: 'NETWORK',
+        severity: 'MEDIUM',
         reference: {},
-        severity: 'MEDIUM'
+        hint:
+          'Remove these key exchange algorithms: diffie-hellman-group14-sha1',
+        location: '138.201.126.99',
+        attributes: {
+          hostname: 'securecodebox.io', payload: %w[diffie-hellman-group14-sha1]
+        }
       },
       findings[1]
     )
 
     assert_equal(
       {
-        attributes: {},
-        category: 'SSH Service',
-        description:
-          ' umac-64-etm@openssh.com, hmac-sha1-etm@openssh.com, umac-64@openssh.com, hmac-sha1',
-        hint: '',
         id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-        location: '138.201.126.99',
-        name: 'Remove these MAC algorithms',
+        name: 'Depracated / discouraged SSH MAC algorithms are used',
+        description: '',
+        category: 'Insecure SSH MAC Algorithms',
         osi_layer: 'NETWORK',
+        severity: 'MEDIUM',
         reference: {},
-        severity: 'MEDIUM'
+        hint:
+          'Remove these MAC algorithms: umac-64-etm@openssh.com, hmac-sha1-etm@openssh.com, umac-64@openssh.com, hmac-sha1',
+        location: '138.201.126.99',
+        attributes: {
+          hostname: 'securecodebox.io',
+          payload: %w[
+            umac-64-etm@openssh.com
+            hmac-sha1-etm@openssh.com
+            umac-64@openssh.com
+            hmac-sha1
+          ]
+        }
       },
       findings[2]
     )
