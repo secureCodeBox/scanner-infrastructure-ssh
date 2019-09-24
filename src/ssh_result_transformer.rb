@@ -9,6 +9,7 @@ class SshResultTransformer
 
   def transform(results, timed_out: false)
     findings = []
+
     results.each do |r|
       findings << {
           id: @uuid_provider.uuid,
@@ -32,7 +33,8 @@ class SshResultTransformer
               start_time: r.dig('start_time'),
               end_time: r.dig('end_time'),
               scan_duration_seconds: r.dig('scan_duration_seconds'),
-              references: r.dig('compliance', 'references')
+              references: r.dig('compliance', 'references'),
+              auth_methods: r.dig('auth_methods').reduce({}) { |h, v| h[v] = true; h }
           }
       }
 
