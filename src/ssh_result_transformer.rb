@@ -141,15 +141,4 @@ class SshResultTransformer
       attributes: { hostname: hostname, payload: payload }
     }
   end
-
-  def decideSeverity(grade)
-    case grade
-    when 'A', 'B'
-      'LOW'
-    when 'C', 'D'
-      'MEDIUM'
-    when 'E', 'F'
-      'HIGH'
-    end
-  end
 end
