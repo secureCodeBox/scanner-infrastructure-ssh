@@ -10,14 +10,13 @@ class SshResultTransformer
     findings = []
 
     results.each do |r|
-      location = r.dig('ip')
+      location = (r.dig('hostname').empty?) ? r.dig('ip') : r.dig('hostname')
       hostname = (r.dig('hostname') unless r.dig('hostname').empty?)
-
       findings <<
         {
           id: @uuid_provider.uuid,
-          name: 'SSH Compliance',
-          description: 'SSH Compliance Information',
+          name: 'SSH Service Information',
+          description: '',
           category: 'SSH Service',
           osi_layer: 'NETWORK',
           severity: 'INFORMATIONAL',
@@ -26,6 +25,7 @@ class SshResultTransformer
           location: location,
           attributes: {
             hostname: hostname,
+            ip_address: r.dig('ip'),
             server_banner:
               (r.dig('server_banner') unless r.dig('server_banner').empty?),
             ssh_version: r.dig('ssh_version'),
@@ -55,7 +55,8 @@ class SshResultTransformer
             create_policy_violation_finding(
               message: policy_violation_message,
               location: location,
-              hostname: hostname
+              hostname: hostname,
+              ip_address: r.dig('ip')
             )
         end
       end
@@ -70,65 +71,68 @@ class SshResultTransformer
     case type
     when /^Add these key exchange algorithms/
       {
-        name: 'Good / encouraged SSH key algorithms are missing',
-        category: 'Missing SSH Key Algorithms'
+        description: 'Good / encouraged SSH key algorithms are missing',
+        name: 'Missing SSH Key Algorithms'
       }
     when /^Add these MAC algorithms/
       {
-        name: 'Good / encouraged SSH MAC algorithms are missing',
-        category: 'Missing SSH MAC Algorithms'
+        description: 'Good / encouraged SSH MAC algorithms are missing',
+        name: 'Missing SSH MAC Algorithms'
       }
     when /^Add these encryption ciphers/
       {
-        name: 'Good / encouraged SSH encryption ciphers are missing',
-        category: 'Missing SSH encryption Ciphers'
+        description: 'Good / encouraged SSH encryption ciphers are missing',
+        name: 'Missing SSH encryption Ciphers'
       }
     when /^Add these compression algorithms/
       {
-        name: 'Good / encouraged SSH compression algorithms are missing',
-        category: 'Missing SSH compression algorithms'
+        description: 'Good / encouraged SSH compression algorithms are missing',
+        name: 'Missing SSH compression algorithms'
       }
     when /^Add these authentication methods/
       {
-        name: 'Good / encouraged SSH authentication methods are missing',
-        category: 'Missing SSH authentication methods'
+        description: 'Good / encouraged SSH authentication methods are missing',
+        name: 'Missing SSH authentication methods'
       }
     when /^Remove these key exchange algorithms/
       {
-        name: 'Depracated / discouraged SSH key algorithms are used',
-        category: 'Insecure SSH Key Algorithms'
+        description: 'Deprecated / discouraged SSH key algorithms are used',
+        name: 'Insecure SSH Key Algorithms'
       }
     when /^Remove these MAC algorithms/
       {
-        name: 'Depracated / discouraged SSH MAC algorithms are used',
-        category: 'Insecure SSH MAC Algorithms'
+        description: 'Deprecated / discouraged SSH MAC algorithms are used',
+        name: 'Insecure SSH MAC Algorithms'
       }
     when /^Remove these encryption ciphers/
       {
-        name: 'Depracated / discouraged SSH encryption ciphers are used',
-        category: 'Insecure SSH encryption Ciphers'
+        description: 'Deprecated / discouraged SSH encryption ciphers are used',
+        name: 'Insecure SSH encryption Ciphers'
       }
     when /^Remove these compression algorithms/
       {
-        name: 'Depracated / discouraged SSH compression algorithms are used',
-        category: 'Insecure SSH compression algorithms'
+        description:
+          'Deprecated / discouraged SSH compression algorithms are used',
+        name: 'Insecure SSH compression algorithms'
       }
     when /^Remove these authentication methods/
       {
-        name: 'Discouraged SSH authentication methods are used',
-        category: 'Discouraged SSH authentication methods'
+        description: 'Discouraged SSH authentication methods are used',
+        name: 'Discouraged SSH authentication methods'
       }
     when /^Update your ssh version to/
       {
-        name: 'Outdated SSH protocol version used',
-        category: 'Outdated SSH Protocol Version'
+        description: 'Outdated SSH protocol version used',
+        name: 'Outdated SSH Protocol Version'
       }
     else
       raise Exception.new "Unexpected Policy Violation Type: '#{message}'"
     end
   end
 
-  def create_policy_violation_finding(message:, location:, hostname:)
+  def create_policy_violation_finding(
+    message:, location:, hostname:, ip_address:
+  )
     policy_violation_type = get_policy_violation_type(message)
 
     payload = message.split(': ')[1].split(', ')
@@ -136,14 +140,16 @@ class SshResultTransformer
     {
       id: @uuid_provider.uuid,
       name: policy_violation_type[:name],
-      description: '',
-      category: policy_violation_type[:category],
+      description: policy_violation_type[:description],
+      category: 'SSH Policy Violation',
       osi_layer: 'NETWORK',
       severity: 'MEDIUM',
       reference: {},
       hint: message,
       location: location,
-      attributes: { hostname: hostname, payload: payload }
+      attributes: {
+        hostname: hostname, ip_address: ip_address, payload: payload
+      }
     }
   end
 end

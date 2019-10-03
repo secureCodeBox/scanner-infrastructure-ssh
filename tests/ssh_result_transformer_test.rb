@@ -76,8 +76,8 @@ EOM
       [
         {
           id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-          name: 'SSH Compliance',
-          description: 'SSH Compliance Information',
+          name: 'SSH Service Information',
+          description: '',
           category: 'SSH Service',
           osi_layer: 'NETWORK',
           severity: 'INFORMATIONAL',
@@ -88,6 +88,7 @@ EOM
             compliance_policy: nil,
             compliant: nil,
             hostname: nil,
+            ip_address: '127.0.0.1',
             os_cpe: 'o:unknown',
             grade: nil,
             start_time: '2019-03-20 14:54:36 +0100',
@@ -247,27 +248,10 @@ EOM
     assert_equal(
       {
         attributes: {
+          auth_methods: %w[publickey],
           compliance_policy: 'Mozilla Modern',
           compliant: false,
-          end_time: '2019-09-23 17:47:51 +0200',
-          grade: 'C',
-          hostname: 'securecodebox.io',
-          os_cpe: 'o:canonical:ubuntu:16.04',
-          references: %w[https://wiki.mozilla.org/Security/Guidelines/OpenSSH],
-          scan_duration_seconds: 0.699356,
-          server_banner: 'SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.4',
-          ssh_lib_cpe: 'a:openssh:openssh:7.2p2',
-          ssh_version: 2.0,
-          start_time: '2019-09-23 17:47:50 +0200',
-          auth_methods: %w[publickey],
-          key_algorithms: %w[
-            curve25519-sha256@libssh.org
-            ecdh-sha2-nistp256
-            ecdh-sha2-nistp384
-            ecdh-sha2-nistp521
-            diffie-hellman-group-exchange-sha256
-            diffie-hellman-group14-sha1
-          ],
+          compression_algorithms: %w[none zlib@openssh.com],
           encryption_algorithms: %w[
             chacha20-poly1305@openssh.com
             aes128-ctr
@@ -275,6 +259,18 @@ EOM
             aes256-ctr
             aes128-gcm@openssh.com
             aes256-gcm@openssh.com
+          ],
+          end_time: '2019-09-23 17:47:51 +0200',
+          grade: 'C',
+          hostname: 'securecodebox.io',
+          ip_address: '138.201.126.99',
+          key_algorithms: %w[
+            curve25519-sha256@libssh.org
+            ecdh-sha2-nistp256
+            ecdh-sha2-nistp384
+            ecdh-sha2-nistp521
+            diffie-hellman-group-exchange-sha256
+            diffie-hellman-group14-sha1
           ],
           mac_algorithms: %w[
             umac-64-etm@openssh.com
@@ -288,14 +284,20 @@ EOM
             hmac-sha2-512
             hmac-sha1
           ],
-          compression_algorithms: %w[none zlib@openssh.com]
+          os_cpe: 'o:canonical:ubuntu:16.04',
+          references: %w[https://wiki.mozilla.org/Security/Guidelines/OpenSSH],
+          scan_duration_seconds: 0.699356,
+          server_banner: 'SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.4',
+          ssh_lib_cpe: 'a:openssh:openssh:7.2p2',
+          ssh_version: 2.0,
+          start_time: '2019-09-23 17:47:50 +0200'
         },
         category: 'SSH Service',
-        description: 'SSH Compliance Information',
+        description: '',
         hint: '',
         id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-        location: '138.201.126.99',
-        name: 'SSH Compliance',
+        location: 'securecodebox.io',
+        name: 'SSH Service Information',
         osi_layer: 'NETWORK',
         reference: {},
         severity: 'INFORMATIONAL'
@@ -306,17 +308,19 @@ EOM
     assert_equal(
       {
         id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-        name: 'Depracated / discouraged SSH key algorithms are used',
-        description: '',
-        category: 'Insecure SSH Key Algorithms',
+        name: 'Insecure SSH Key Algorithms',
+        description: 'Deprecated / discouraged SSH key algorithms are used',
+        category: 'SSH Policy Violation',
         osi_layer: 'NETWORK',
         severity: 'MEDIUM',
         reference: {},
         hint:
           'Remove these key exchange algorithms: diffie-hellman-group14-sha1',
-        location: '138.201.126.99',
+        location: 'securecodebox.io',
         attributes: {
-          hostname: 'securecodebox.io', payload: %w[diffie-hellman-group14-sha1]
+          ip_address: '138.201.126.99',
+          hostname: 'securecodebox.io',
+          payload: %w[diffie-hellman-group14-sha1]
         }
       },
       findings[1]
@@ -325,16 +329,17 @@ EOM
     assert_equal(
       {
         id: '49bf7fd3-8512-4d73-a28f-608e493cd726',
-        name: 'Depracated / discouraged SSH MAC algorithms are used',
-        description: '',
-        category: 'Insecure SSH MAC Algorithms',
+        name: 'Insecure SSH MAC Algorithms',
+        description: 'Deprecated / discouraged SSH MAC algorithms are used',
+        category: 'SSH Policy Violation',
         osi_layer: 'NETWORK',
         severity: 'MEDIUM',
         reference: {},
         hint:
           'Remove these MAC algorithms: umac-64-etm@openssh.com, hmac-sha1-etm@openssh.com, umac-64@openssh.com, hmac-sha1',
-        location: '138.201.126.99',
+        location: 'securecodebox.io',
         attributes: {
+          ip_address: '138.201.126.99',
           hostname: 'securecodebox.io',
           payload: %w[
             umac-64-etm@openssh.com
