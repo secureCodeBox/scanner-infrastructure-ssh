@@ -53,10 +53,10 @@ class SshResultTransformer
           .each do |policy_violation_message|
           findings <<
             create_policy_violation_finding(
-              message: policy_violation_message,
-              location: location,
-              hostname: hostname,
-              ip_address: r.dig('ip')
+              policy_violation_message,
+              location,
+              hostname,
+              r.dig('ip')
             )
         end
       end
@@ -131,7 +131,7 @@ class SshResultTransformer
   end
 
   def create_policy_violation_finding(
-    message:, location:, hostname:, ip_address:
+    message, location, hostname, ip_address
   )
     policy_violation_type = get_policy_violation_type(message)
 
