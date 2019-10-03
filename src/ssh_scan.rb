@@ -6,7 +6,7 @@ require 'pathname'
 require_relative './ssh_result_transformer'
 
 $logger = Logger.new(STDOUT)
-$logger.level = ENV.key? 'DEBUG' ? Logger::DEBUG : Logger::INFO
+$logger.level = if ENV.key? 'DEBUG' then Logger::DEBUG else Logger::INFO end
 
 class SshScan
   attr_reader :raw_results
