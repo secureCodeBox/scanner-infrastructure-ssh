@@ -352,4 +352,73 @@ EOM
       findings[2]
     )
   end
+
+  def test_should_transform_errored_result_into_zero_findings
+    test_raw = <<EOM
+[
+  {
+    "ssh_scan_version": "0.0.42",
+    "ip": "192.168.42.42",
+    "hostname": "",
+    "port": 22,
+    "server_banner": "",
+    "ssh_version": "unknown",
+    "os": "unknown",
+    "os_cpe": "o:unknown",
+    "ssh_lib": "unknown",
+    "ssh_lib_cpe": "a:unknown",
+    "key_algorithms": [
+
+    ],
+    "encryption_algorithms_client_to_server": [
+
+    ],
+    "encryption_algorithms_server_to_client": [
+
+    ],
+    "mac_algorithms_client_to_server": [
+
+    ],
+    "mac_algorithms_server_to_client": [
+
+    ],
+    "compression_algorithms_client_to_server": [
+
+    ],
+    "compression_algorithms_server_to_client": [
+
+    ],
+    "languages_client_to_server": [
+
+    ],
+    "languages_server_to_client": [
+
+    ],
+    "auth_methods": [
+
+    ],
+    "keys": {
+    },
+    "dns_keys": null,
+    "duplicate_host_key_ips": [
+
+    ],
+    "compliance": {
+    },
+    "start_time": "2019-10-04 12:31:05 +0200",
+    "end_time": "2019-10-04 12:31:13 +0200",
+    "scan_duration_seconds": 8.005164,
+    "error": "Socket is no longer valid"
+  }
+]
+EOM
+    result = JSON.parse(test_raw)
+
+    findings = @transformer.transform(result)
+
+    assert_equal(
+      [],
+      findings
+    )
+  end
 end

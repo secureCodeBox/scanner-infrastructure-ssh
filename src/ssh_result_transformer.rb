@@ -10,54 +10,56 @@ class SshResultTransformer
     findings = []
 
     results.each do |r|
-      location = (r.dig('hostname').empty?) ? r.dig('ip') : r.dig('hostname')
-      hostname = (r.dig('hostname') unless r.dig('hostname').empty?)
-      findings <<
-        {
-          id: @uuid_provider.uuid,
-          name: 'SSH Service Information',
-          description: '',
-          category: 'SSH Service',
-          osi_layer: 'NETWORK',
-          severity: 'INFORMATIONAL',
-          reference: {},
-          hint: '',
-          location: location,
-          attributes: {
-            hostname: hostname,
-            ip_address: r.dig('ip'),
-            server_banner:
-              (r.dig('server_banner') unless r.dig('server_banner').empty?),
-            ssh_version: r.dig('ssh_version'),
-            os_cpe: r.dig('os_cpe'),
-            ssh_lib_cpe: r.dig('ssh_lib_cpe'),
-            compliance_policy: r.dig('compliance', 'policy'),
-            compliant: r.dig('compliance', 'compliant'),
-            grade: r.dig('compliance', 'grade'),
-            start_time: r.dig('start_time'),
-            end_time: r.dig('end_time'),
-            scan_duration_seconds: r.dig('scan_duration_seconds'),
-            references: r.dig('compliance', 'references'),
-            auth_methods: r.dig('auth_methods'),
-            key_algorithms: r.dig('key_algorithms'),
-            encryption_algorithms:
-              r.dig('encryption_algorithms_server_to_client'),
-            mac_algorithms: r.dig('mac_algorithms_server_to_client'),
-            compression_algorithms:
-              r.dig('compression_algorithms_server_to_client')
-          }
-        }
+      unless r.has_key? "error"
+        location = (r.dig('hostname').empty?) ? r.dig('ip') : r.dig('hostname')
+        hostname = (r.dig('hostname') unless r.dig('hostname').empty?)
+        findings <<
+            {
+                id: @uuid_provider.uuid,
+                name: 'SSH Service Information',
+                description: '',
+                category: 'SSH Service',
+                osi_layer: 'NETWORK',
+                severity: 'INFORMATIONAL',
+                reference: {},
+                hint: '',
+                location: location,
+                attributes: {
+                    hostname: hostname,
+                    ip_address: r.dig('ip'),
+                    server_banner:
+                        (r.dig('server_banner') unless r.dig('server_banner').empty?),
+                    ssh_version: r.dig('ssh_version'),
+                    os_cpe: r.dig('os_cpe'),
+                    ssh_lib_cpe: r.dig('ssh_lib_cpe'),
+                    compliance_policy: r.dig('compliance', 'policy'),
+                    compliant: r.dig('compliance', 'compliant'),
+                    grade: r.dig('compliance', 'grade'),
+                    start_time: r.dig('start_time'),
+                    end_time: r.dig('end_time'),
+                    scan_duration_seconds: r.dig('scan_duration_seconds'),
+                    references: r.dig('compliance', 'references'),
+                    auth_methods: r.dig('auth_methods'),
+                    key_algorithms: r.dig('key_algorithms'),
+                    encryption_algorithms:
+                        r.dig('encryption_algorithms_server_to_client'),
+                    mac_algorithms: r.dig('mac_algorithms_server_to_client'),
+                    compression_algorithms:
+                        r.dig('compression_algorithms_server_to_client')
+                }
+            }
 
-      unless r.dig('compliance', 'recommendations').nil?
-        r.dig('compliance', 'recommendations')
-          .each do |policy_violation_message|
-          findings <<
-            create_policy_violation_finding(
-              policy_violation_message,
-              location,
-              hostname,
-              r.dig('ip')
-            )
+        unless r.dig('compliance', 'recommendations').nil?
+          r.dig('compliance', 'recommendations')
+              .each do |policy_violation_message|
+            findings <<
+                create_policy_violation_finding(
+                    policy_violation_message,
+                    location,
+                    hostname,
+                    r.dig('ip')
+                )
+          end
         end
       end
     end
