@@ -1,5 +1,6 @@
 require 'json'
 require 'ruby-scanner-scaffolding'
+require 'pathname'
 
 require_relative './ssh_configuration'
 
@@ -11,16 +12,14 @@ class SshWorker < CamundaWorker
   def initialize(
     camunda_url,
     topic,
-    variables,
-    task_lock_duration = 3_600_000,
-    poll_interval = 5
+    variables
   )
     super(
       camunda_url,
       topic,
       variables,
-      task_lock_duration = 3_600_000,
-      poll_interval = 5
+      3_600_000,
+      5
     )
 
     @errored = false
@@ -30,13 +29,17 @@ class SshWorker < CamundaWorker
     locations = targets.map { |target| target.dig('location') }
     config = SshConfiguration.from_target(job_id, targets.first)
 
-    targetFile = File.open("/tmp/targets-of-#{job_id}.txt", 'w+')
-    targetFile.puts locations
-    targetFile.close
+    target_file_path = Pathname.new "/tmp/targets-of-#{job_id}.txt"
 
-    scan = SshScan.new(targetFile, config)
+    File.open(target_file_path, 'w+') do |target_file|
+      target_file.puts locations
+    end
+
+    scan = SshScan.new(target_file_path, config)
     scan.start
     @errored = true if scan.errored
+
+    File.delete target_file_path
 
     {
       findings: scan.results,
