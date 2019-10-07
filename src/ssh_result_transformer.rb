@@ -67,6 +67,7 @@ class SshResultTransformer
     findings
   end
 
+  # rubocop:disable MethodComplexity
   def get_policy_violation_type(message)
     type = message.split(': ')[0]
 
@@ -131,6 +132,7 @@ class SshResultTransformer
       raise Exception.new "Unexpected Policy Violation Type: '#{message}'"
     end
   end
+  # rubocop:enable MethodComplexity
 
   def create_policy_violation_finding(
     message, location, hostname, ip_address
