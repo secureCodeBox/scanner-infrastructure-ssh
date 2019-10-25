@@ -29,7 +29,7 @@ class SshResultTransformer
                     ip_address: r.dig('ip'),
                     server_banner:
                         (r.dig('server_banner') unless r.dig('server_banner').empty?),
-                    ssh_version: "#{r.dig('ssh_version')}",
+                    ssh_version: r.dig('ssh_version'),
                     os_cpe: r.dig('os_cpe'),
                     ssh_lib_cpe: r.dig('ssh_lib_cpe'),
                     compliance_policy: r.dig('compliance', 'policy'),
