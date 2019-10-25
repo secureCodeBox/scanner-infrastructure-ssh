@@ -289,7 +289,7 @@ EOM
           scan_duration_seconds: 0.699356,
           server_banner: 'SSH-2.0-OpenSSH_7.2p2 Ubuntu-4ubuntu2.4',
           ssh_lib_cpe: 'a:openssh:openssh:7.2p2',
-          ssh_version: 2.0,
+          ssh_version: "2.0",
           start_time: '2019-09-23 17:47:50 +0200'
         },
         category: 'SSH Service',
