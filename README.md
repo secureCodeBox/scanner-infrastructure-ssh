@@ -44,7 +44,7 @@ Example configuration:
     "context": "Example Test",
     "target": {
       "name": "BodgeIT on OpenShift",
-      "location": "bodgeit-scb.cloudapps.iterashift.com",
+      "location": "bodgeit.example.com",
       "attributes": {}
     }
   }
@@ -55,35 +55,33 @@ Example Output:
 
 ```json
 {
-"findings":[  
-        {  
-            "id":"15571571-c578-4a22-8416-0c54cd05829c",
-            "name":"SSH Compliance",
-            "description":"SSH Compliance Information",
-            "category":"SSH Service",
-            "osi_layer":"NETWORK",
-            "severity":"INFORMATIONAL",
-            "reference":{  
-
-            },
-            "hint":"",
-            "location":"52.58.225.89",
-            "attributes":{  
-                "hostname":"bodgeit-scb.cloudapps.iterashift.com",
-                "server_banner":"",
-                "ssh_version":"unknown",
-                "os_cpe":"o:unknown",
-                "ssh_lib_cpe":"a:unknown",
-                "compliance_policy":null,
-                "compliant":null,
-                "grade":null,
-                "start_time":"2019-09-11 11:41:48 +0000",
-                "end_time":"2019-09-11 11:41:54 +0000",
-                "scan_duration_seconds":5.017572203,
-                "references":null
-            }
-        }
-    ]
+  "findings": [
+    {
+      "id":"15571571-c578-4a22-8416-0c54cd05829c",
+      "name":"SSH Compliance",
+      "description":"SSH Compliance Information",
+      "category":"SSH Service",
+      "osi_layer":"NETWORK",
+      "severity":"INFORMATIONAL",
+      "reference":{},
+      "hint":"",
+      "location":"192.168.0.1",
+      "attributes":{
+        "hostname":"bodgeit.example.com",
+        "server_banner":"",
+        "ssh_version":"unknown",
+        "os_cpe":"o:unknown",
+        "ssh_lib_cpe":"a:unknown",
+        "compliance_policy":null,
+        "compliant":null,
+        "grade":null,
+        "start_time":"2019-09-11 11:41:48 +0000",
+        "end_time":"2019-09-11 11:41:54 +0000",
+        "scan_duration_seconds":5.017572203,
+        "references":null
+      }
+    }
+  ]
 }
 ```
 
@@ -93,11 +91,11 @@ Example Output:
 
 To configure this service specify the following environment variables:
 
-| Environment Variable       | Value Example |
-| -------------------------- | ------------- |
-| ENGINE_ADDRESS             | http://engine |
-| ENGINE_BASIC_AUTH_USER     | username      |
-| ENGINE_BASIC_AUTH_PASSWORD | 123456        |
+| Environment Variable         | Value Example |
+| ---------------------------- | ------------- |
+| `ENGINE_ADDRESS`             | http://engine |
+| `ENGINE_BASIC_AUTH_USER`     | username      |
+| `ENGINE_BASIC_AUTH_PASSWORD` | 123456        |
 
 ### Local setup
 
