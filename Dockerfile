@@ -55,4 +55,4 @@ LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-ssh" \
     org.opencontainers.image.revision=$COMMIT_ID \
     org.opencontainers.image.created=$BUILD_DATE
 
-ENTRYPOINT ["ruby","./src/main.rb"]
+ENTRYPOINT ["bundle","exec","ruby","./src/main.rb"]
