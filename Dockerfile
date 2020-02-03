@@ -10,10 +10,9 @@ ADD Gemfile.lock /sectools
 RUN apk --update add openssh-client && apk --update add bash && \
     rm -rf /var/cache/apk/*
 
-RUN gem install ssh_scan:${SSH_SCAN_VERSION} bundler
+RUN gem install bundler
 
-RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
-    apk --update add git && \
+RUN apk --update add --virtual build-dependencies ruby-dev build-base git && \
     bundle install && \
     apk del build-dependencies && \
     rm -rf /var/cache/apk/*
