@@ -48,4 +48,12 @@ class SshWorker < CamundaWorker
       scannerType: 'ssh'
     }
   end
+
+  def version
+    if ENV.key? 'SSH_SCAN_VERSION'
+      ENV["SSH_SCAN_VERSION"]
+    else
+      "unkown"
+    end
+  end
 end

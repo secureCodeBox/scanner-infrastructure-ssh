@@ -1,5 +1,7 @@
 FROM ruby:alpine
 
+ARG SSH_SCAN_VERSION="0.0.42"
+
 WORKDIR /sectools
 ADD Gemfile /sectools
 ADD Gemfile.lock /sectools
@@ -8,7 +10,7 @@ ADD Gemfile.lock /sectools
 RUN apk --update add openssh-client && apk --update add bash && \
     rm -rf /var/cache/apk/*
 
-RUN gem install ssh_scan:0.0.42 bundler
+RUN gem install ssh_scan:${SSH_SCAN_VERSION} bundler
 
 RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
     apk --update add git && \
@@ -42,6 +44,8 @@ ARG VERSION
 ENV SCB_COMMIT_ID ${COMMIT_ID}
 ENV SCB_REPOSITORY_URL ${REPOSITORY_URL}
 ENV SCB_BRANCH ${BRANCH}
+
+ENV SSH_SCAN_VERSION ${SSH_SCAN_VERSION}
 
 LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-ssh" \
     org.opencontainers.image.description="SSH_Scan integration for secureCodeBox" \
