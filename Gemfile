@@ -5,4 +5,4 @@ gem "rest-client", '2.1.0'
 gem "ssh_scan", '0.0.42'
 gem "thin"
 
-gem "ruby-scanner-scaffolding", :git => "https://github.com/secureCodeBox/ruby-scanner-scaffolding.git", :tag => "v1.1.1"
+gem "ruby-scanner-scaffolding", :git => "https://github.com/secureCodeBox/ruby-scanner-scaffolding.git", :tag => "v1.1.2"
