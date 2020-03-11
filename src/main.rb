@@ -9,6 +9,8 @@ require_relative './ssh_worker'
 set :port, 8_080
 set :bind, '0.0.0.0'
 set :environment, :production
+set :server, 'thin'
+disable :logging, :static, :show_exceptions
 
 client =
   SshWorker.new(

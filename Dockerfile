@@ -8,10 +8,9 @@ ADD Gemfile.lock /sectools
 RUN apk --update add openssh-client && apk --update add bash && \
     rm -rf /var/cache/apk/*
 
-RUN gem install ssh_scan bundler
+RUN gem install bundler
 
-RUN apk --update add --virtual build-dependencies ruby-dev build-base && \
-    apk --update add git && \
+RUN apk --update add --virtual build-dependencies ruby-dev build-base git && \
     bundle install && \
     apk del build-dependencies && \
     rm -rf /var/cache/apk/*
@@ -42,6 +41,8 @@ ARG VERSION
 ENV SCB_COMMIT_ID ${COMMIT_ID}
 ENV SCB_REPOSITORY_URL ${REPOSITORY_URL}
 ENV SCB_BRANCH ${BRANCH}
+
+ENV SSH_SCAN_VERSION "0.0.42"
 
 LABEL org.opencontainers.image.title="secureCodeBox scanner-webserver-ssh" \
     org.opencontainers.image.description="SSH_Scan integration for secureCodeBox" \
